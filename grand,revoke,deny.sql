@@ -197,3 +197,56 @@ as
 return select distinct d.DepartmentName from Departments as d
 
 select * from depart();
+
+--STORE PROCEDURE
+
+CREATE PROCEDURE spemp
+as
+begin
+select * from Employees
+end
+go
+
+exec spemp
+
+CREATE PROCEDURE spdepart
+as
+begin
+select e.FirstName , e.LastName , d.DepartmentName from Employees as e join Departments as d on e.DepartmentID = d.DepartmentID where e.DepartmentID = 1;
+end
+go
+
+exec spdepart
+
+ALTER PROCEDURE spdepart
+as
+begin
+select e.FirstName , e.LastName ,e.Salary, d.DepartmentName from Employees as e join Departments as d on e.DepartmentID = d.DepartmentID where e.DepartmentID = 1;
+end
+go
+
+exec spdepart
+
+
+create PROCEDURE Student21
+@id int
+as
+begin
+select * from Employees where EmployeeID = @id;
+end
+go
+
+exec Student21 1
+
+alter procedure zain
+@ids int ,
+@fname varchar(255)
+as
+begin
+select FirstName , LastName , ((Salary/100)*5) + Salary as salary from Employees where EmployeeID = @ids
+end
+go
+
+exec zain @ids = 1 , @fname = 'Zain'
+
+select * from Employees
