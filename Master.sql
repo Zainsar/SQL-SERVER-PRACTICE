@@ -250,3 +250,97 @@ go
 exec zain @ids = 1 , @fname = 'Zain'
 
 select * from Employees
+--Show Increment Salary by EmployeeID
+Create PROCEDURE IncrementSalary
+    @EmployeeID INT,
+	@IncrementAmount DECIMAL(10, 2)
+AS
+BEGIN
+    SELECT FirstName, LastName, Salary + @IncrementAmount
+    FROM Employees
+    WHERE EmployeeID = @EmployeeID;
+END;
+
+EXEC IncrementSalary @EmployeeID = 1, @IncrementAmount = 2000;
+
+--Update Increment Salary by EmployeeID
+CREATE PROCEDURE UpdateIncrementSalary
+    @EmployeeID INT,
+    @IncrementAmount DECIMAL(10, 2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Employees
+    SET Salary = Salary + @IncrementAmount
+    WHERE EmployeeID = @EmployeeID;
+
+    SELECT FirstName, LastName, Salary
+    FROM Employees
+    WHERE EmployeeID = @EmployeeID;
+END;
+
+EXEC UpdateIncrementSalary @EmployeeID = 1, @IncrementAmount = 1000;
+
+--Show Increment Salary by EmployeeID or FirstName
+CREATE PROCEDURE ShowIncrementSalary
+    @Identifier NVARCHAR(100),
+    @IncrementAmount DECIMAL(10, 2)
+AS
+BEGIN
+        IF EXISTS (
+        SELECT 1
+        FROM Employees
+        WHERE EmployeeID = TRY_CAST(@Identifier AS INT)
+            OR FirstName = @Identifier
+    )
+    BEGIN
+        SELECT FirstName, LastName, Salary + @IncrementAmount
+        FROM Employees
+        WHERE EmployeeID = TRY_CAST(@Identifier AS INT)
+            OR FirstName = @Identifier;
+    END
+    ELSE
+    BEGIN
+        PRINT 'Employee not found.';
+    END
+END;
+
+EXEC ShowIncrementSalary @Identifier = '1', @IncrementAmount = 1000;
+
+EXEC ShowIncrementSalary @Identifier = 'Zain', @IncrementAmount = 500;
+
+--Update Increment Salary by EmployeeID or FirstName
+CREATE PROCEDURE UpdateIncrementSalary2
+    @Identifier NVARCHAR(100),
+    @IncrementAmount DECIMAL(10, 2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1
+        FROM Employees
+        WHERE EmployeeID = TRY_CAST(@Identifier AS INT)
+            OR FirstName = @Identifier
+    )
+    BEGIN
+        UPDATE Employees
+        SET Salary = Salary + @IncrementAmount
+        WHERE EmployeeID = TRY_CAST(@Identifier AS INT)
+            OR FirstName = @Identifier;
+
+        SELECT FirstName, LastName, Salary
+        FROM Employees
+        WHERE EmployeeID = TRY_CAST(@Identifier AS INT)
+            OR FirstName = @Identifier;
+    END
+    ELSE
+    BEGIN
+        PRINT 'Employee not found.';
+    END
+END;
+
+EXEC UpdateIncrementSalary2 @Identifier = '1', @IncrementAmount = 1000;
+
+EXEC UpdateIncrementSalary2 @Identifier = 'Zain', @IncrementAmount = 500;
