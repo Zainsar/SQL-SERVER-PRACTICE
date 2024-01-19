@@ -344,3 +344,63 @@ END;
 EXEC UpdateIncrementSalary2 @Identifier = '1', @IncrementAmount = 1000;
 
 EXEC UpdateIncrementSalary2 @Identifier = 'Zain', @IncrementAmount = 500;
+
+alter table employees alter column Gender varchar(255) 
+
+alter Table employees add Gender varchar(255);
+
+update Employees SET Gender = 'Male'
+
+update Employees SET Gender = 'Female' where EmployeeID = 4 or EmployeeID = 6 or EmployeeID = 8 or EmployeeID = 10;
+
+select * from Employees where Gender in (select Gender from Employees where Gender = 'Female')
+
+select * from Employees where Salary in (select Salary from Employees where Salary > 70000)
+
+select * from Employees where DepartmentID = (select DepartmentID from Departments where DepartmentName = 'IT')
+
+create table HR_Emp(
+EmployeeID int,
+Name Varchar(255),
+Salary decimal(10,2),
+Gender Varchar(255)
+);
+
+select * from HR_Emp
+
+insert into HR_Emp (EmployeeID,Name,Salary,Gender)
+select EmployeeID,FirstName,Salary,Gender from Employees where DepartmentID = (select DepartmentID from Departments where DepartmentName = 'HR')
+
+create table IT_Emp(
+EmployeeID int,
+Name Varchar(255),
+Salary decimal(10,2),
+Gender Varchar(255)
+);
+
+select * from IT_Emp
+
+insert into IT_Emp (EmployeeID,Name,Salary,Gender)
+select EmployeeID,FirstName,Salary,Gender from Employees where DepartmentID = (select DepartmentID from Departments where DepartmentName = 'IT')
+
+create table fin_Emp(
+EmployeeID int,
+Name Varchar(255),
+Salary decimal(10,2),
+Gender Varchar(255)
+);
+
+select * from fin_Emp
+
+insert into fin_Emp (EmployeeID,Name,Salary,Gender)
+select EmployeeID,FirstName,Salary,Gender from Employees where DepartmentID = (select DepartmentID from Departments where DepartmentName = 'finance')
+
+select * from Employees where Salary < any (select Salary from Employees where Salary > 70000)
+
+select * from Employees where Salary not in (select Salary from Employees where Salary > 70000)
+
+select * from Employees where Salary in (select Salary from Employees where Salary > 70000)
+
+select * from Employees where Salary <= all (select Salary from Employees where Salary > 70000)
+
+select * from Employees
