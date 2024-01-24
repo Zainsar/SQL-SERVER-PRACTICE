@@ -404,3 +404,61 @@ select * from Employees where Salary in (select Salary from Employees where Sala
 select * from Employees where Salary <= all (select Salary from Employees where Salary > 70000)
 
 select * from Employees
+
+-- Triggers
+
+create trigger Tr_insert_emp on employee
+for insert
+as
+begin
+print 'someone trying to access your table'
+end
+
+create trigger Tr_insert_employee on employee
+after insert
+as
+begin
+select * from inserted
+
+end
+
+-- Update trigger
+create trigger Tr_update_employee on employee
+after update
+as
+begin
+select * from inserted
+select * from deleted
+
+end
+
+
+-- inserting value in emp
+
+INSERT INTO Employees(FirstName, LastName, DepartmentID, Salary, Age, Gender)
+VALUES
+    ('ali', 'hassan', 2, 21000.00, 25, 'Male')
+	select * from Employees
+select * from inserted
+update employee set fname = 'affan' where id = 102
+
+-- creating audit table for insert trigger
+
+--creating audit table
+create table insert_trigger_details(
+id int primary key identity,
+auditInfo varchar(60)
+)
+
+
+create trigger tr_insert_audit on employees
+instead of insert
+as 
+begin
+declare @id int, @name varchar(50)
+
+select @id = EmployeeID, @name = FirstName from inserted
+
+insert into insert_trigger_details values ('user with id  ' + CAST(@id as varchar(50)) + '  with name ' + @name + '  is inserted in the table')
+end
+select * from insert_trigger_details
