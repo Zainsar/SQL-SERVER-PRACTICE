@@ -459,6 +459,20 @@ declare @id int, @name varchar(50)
 
 select @id = EmployeeID, @name = FirstName from inserted
 
+insert into insert_trigger_details values ('user with id  ' + CAST(@id as varchar(50)) + '  with name ' + @name + '  is inserted in the table' + CAST(GETDATE() as VARCHAR (255)))
+end
+select * from insert_trigger_details
+
+create trigger tr_delete_audit on employees
+instead of delete
+as 
+begin
+declare @id int, @name varchar(50)
+
+select @id = EmployeeID, @name = FirstName from deleted
+
 insert into insert_trigger_details values ('user with id  ' + CAST(@id as varchar(50)) + '  with name ' + @name + '  is inserted in the table')
 end
 select * from insert_trigger_details
+select * from Employees
+delete from Employees where EmployeeID = 1
