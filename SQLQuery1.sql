@@ -1,119 +1,109 @@
-create database Practical;
+create database practical;
+
+create table customers (
+customerId int primary key,
+firstname varchar(212),
+lastname varchar (212),
+email varchar (212),
+phonenumber int
+);
+
+create table orders (
+orderId int primary key,
+customerId int,
+orderdate date,
+totalamount varchar (212),
+FOREIGN KEY (customerId) REFERENCES customers(customerId)
+);
+
+create table ordersdetails (
+ordersdetailId int primary key,
+orderId int,
+productId int,
+quntity int,
+unitprice varchar (212),
+FOREIGN KEY (orderId) REFERENCES orders(orderId),
+FOREIGN KEY (productId) REFERENCES products(productId)
+);
+
+create table products (
+productId int primary key,
+productname varchar(212),
+unitprice varchar (212),
+instockquantity varchar (212)
+);
 
 
--- create table customer
+INSERT INTO customers (customerId,firstname, lastname,email, phonenumber)
+VALUES
+    (1, 'John', 'Doe','doe@gmail.com',032978279 ),
+    (2, 'Jane', 'Smith','jane@gmail.com',03333782 ),
+    (3,'Mike', 'Johnson','mike@gmail.com',0333282 ),
+    (4, 'Emily', 'Williams','emily@gmail.com',03333270),
+    (5, 'David', 'Brown','brown@gmail.com',03097827 ),
+    (6, 'Sarah', 'Miller', 'miller@gmail.com',033789),
+    (7, 'Chris', 'Wilson','chirs@gmail.com',03092789),
+    (8, 'Anna', 'Jones', 'anna@gmail.com',037773789),
+    (9, 'Brian', 'Taylor', 'brian@gmail.com',0382789),
+    (10, 'Laura', 'Anderson','laura@gmail.com',039782789);
 
-create table Customers (
-CustomerID int primary key,
-FirstName varchar(255),
-LastName varchar(255),
-Email varchar(255),
-PhoneNumber bigint
+	
+INSERT INTO orders (orderId,customerId ,orderdate,totalamount)
+VALUES(3,1,'2022-1-11',400),(4,4,'2002-3-2',8900),(5,5,'2220-4-3',2800),
+(6,6,'2220-6-7',4300),(7,7,'2220-5-3',3400),(8,8,'2220-3-2',9500),(9,9,'2220-7-3',2300),(10,10,'2052-9-3',5300);
+select * from orders
 
-)
-
-
-  
-insert into Customers (CustomerID, FirstName,LastName,Email,PhoneNumber) values 
-(1,'Muhammad', 'Talha', 'talha@gmail.com', 03322445566),
-(2,'Ali', 'Khan', 'ali@gmail.com', 08822445566),
-(3,'Muhammad', 'Saad', 'saad@gmail.com', 05522445566),
-(4,'Muhammad', 'Talha', 'kashif@gmail.com', 06622445566),
-(5,'Tahir', 'Ahmed', 'tahir@gmai.com', 07722445566),
-(6,'Aliyan', 'khan', 'aliyan@gmail.com', 08822445566),
-(7,'Danish', 'rustam', 'danish@gmail.com', 09922445566),
-(8,'Syed', 'daniyal', 'daniyal@gmail.com', 02522445566),
-(9,'Bazil', 'Ali', 'bazil@gmail.com', 07522445566),
-(10,'Abdul', 'Hadi', 'hadi@gmail.com', 09922445566)
+INSERT INTO ordersdetails (ordersdetailId,orderId,productId ,quntity,unitprice)
+values(1,1,1,1,'1'),(2,2,2,2,'12'),(3,3,3,21,'111'),(4,4,4,4,'4'),(5,5,5,5,'2'),
+(6,6,6,6,'430'),(7,7,7,7,'400'),(8,8,8,8,'9'),(9,9,9,9,'300'),(10,10,10,10,'30');
 
 
-select * from Customers
+INSERT INTO products (productId,productname,unitprice ,instockquantity)
+values(1,'lays','20','22'),(2,'cake','20','2'),(3,'bally','3','400'),(4,'paper','2','90'),(5,'dog','2','90'),
+(6,'ball','1','11'),(7,'bat','3','11'),(8,'wicket','2','5'),(9,'shirt','3','3'),(10,'pant' ,'2','30');
 
--- create table orders
-create table Orders (
-OrderID int primary key,
-CustomerID int ,
-OrderDate bigint,
-TotalAmmount int, 
-Foreign key(CustomerID) references Customers(CustomerID)
-)
+--1)
+create login order_clerk with password ='password';
+ create user order_clerk for login order_clerk;
+ grant insert,update on dbo.orders to order_clerk;
 
-insert into Orders (OrderID,CustomerID,OrderDate,TotalAmmount) values 
-(1,1, 2006-9-30 , 1000),
-(2,2,2007-9-1 , 2000),
-(3,3,2008-9-2 , 3000),
-(4,4,2009-9-3 , 4000),
-(5,5,2010-9-4 , 5000),
-(6,6,2010-9-5 , 6000),
-(7,7,2011-9-6 , 7000),
-(8,8,2012-9-7 , 8000),
-(9,9,2013-9-8 , 9000),
-(10,10,2014-9-9 , 10000)
+ --2
+	create trigger update_stock_audit on products
+	for UPDATE
+	as
+	begin
+	print'data insert'
+	end
 
-select * from Orders
-
- -- create table names Products
- create table products(
- ProductID int primary key,
- ProductName varchar(255),
- UnitPrice bigint,
- StockQuantity bigint
-
- )
-
- insert into products (ProductID,ProductName,UnitPrice,StockQuantity) values 
- (1,'Pasta', 100, 200),
-(2,'Pizza', 200, 300),
-(3,'Burger', 300, 400),
-(4,'ZingerBurger', 400, 500),
-(5,'ChickenBurger', 500, 600),
-(6,'BeefBurger', 600, 700),
-(7,'MuttonBurger', 700, 800),
-(8,'FrenchFries', 800, 900),
-(9,'Roll', 900, 1000),
-(10,'Samosas', 1000, 1100)
-
-select * from products
-
-create table orderDetails (
-OrderDetailsID int not null identity,
-OrderID int not null,
-ProductID int,
-Quantity int not null,
-UnitPrice int not null,
-Foreign key(ProductID) references products(ProductID),
-Foreign key(OrderID) references Orders(OrderID) 
-)
-
-  
-  
- insert into orderDetails(OrderID,ProductID,Quantity,UnitPrice) values 
- (1,1, 10, 1000),
-(2,2,20 , 2000),
-(3,3,30 , 3000),
-(4,4,40 , 4000),
-(5,5,50 , 5000),
-(6,6,60 , 6000),
-(7,7,70, 7000),
-(8,8,50, 8000),
-(9,9,70, 9000),
-(10,10,100, 10000)
-
-select * from orderDetails
-
---1
-create login OrderClerk with password = 'order'
-create user OrderClerk for login OrderClerk
-grant insert,update on dbo.orders to OrderClerk
-
---2
+--3
+select firstname,lastname,orderdate,totalamount from customers as c inner join orders as o on c.customerId=o.customerId;
 
 
+--4
+select count(totalamount), productname , quntity,totalamount from products as p inner join ordersdetails as o on p.productId=o.productId
+inner join orders as oo on o.orderId=oo.orderId; 
 
+--5
+create procedure getorderbycustomer
+	@id varchar(215)
+	as
+	begin
+	select * from customers where customerId = @id;
+	end
 
+	exec getorderbycustomer @id = 2;
 
+	--6
+	create view ordersummary as
+	SELECT orderId,customerId,orderdate,totalamount 
+from orders;
+	select * from ordersummary;
 
+	--7
+	create view productinventory as
+	SELECT productname,instockquantity
+from products;
+	select * from productinventory;
 
-
-
- 
+	--8	
+	select firstname,lastname, orderId,orderdate,totalamount from ordersummary as o inner join customers as c on o.customerId=c.customerId;
